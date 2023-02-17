@@ -1,0 +1,83 @@
+= EC Project Notes
+
+== Current:
+
+Local dev setup
+
+* install JDK 17 (used link:https://sdkman.io/[sdkman])
+* connected to GitHub (GH) to get `link:https://github.com/Smarsh/enterprise-capture-vam[enterprise-capture-vam]` code
+* this repo contains 10 sub-projects:
+
+[cols="1,1,1"]
+|===
+| sub-project | build system | local build status
+
+| ec-vam-ci
+| ???
+| UNKONWN
+
+| ec-vam-core
+| maven
+| SUCCESS
+
+| ec-vam-data-consumer
+| maven
+| SUCCESS
+
+| ec-vam-data-transformer
+| maven
+| SUCCESS
+
+| ec-vam-deployment
+| ???
+| UNKONWN
+
+| ec-vam-example-transformer
+| maven
+| SUCCESS
+
+| ec-vam-manifest-processor
+| maven
+| SUCCESS
+
+| ec-vam-manifest-publisher
+| maven
+| SUCCESS
+
+| ec-vam-monitoring-service
+| maven
+| SUCCESS
+
+| ec-vam-test
+| ???
+| UNKONWN
+|===
+
+
+=== Script used to build maven-based projects
+
+[code,bash]
+----
+#!/usr/bin/env bash
+
+# NOTE: THIS REQUIRES FINDUTILS TO BE INSTALLED:
+#       brew install findutils
+
+set -e
+set -u
+set pipefail
+
+PROJECTS=$(gfind . -maxdepth 2 -type f -name pom.xml -printf '%h ')
+
+
+for p in ${PROJECTS[@]} ; do
+    echo -n "building ${p} ... "
+    pushd ${p} > /dev/null
+         mvn clean install --log-file ../${p}-build.log  && echo "SUCCESS" || echo "FAILED TO BUILD ${p}" && exit 1
+    popd > /dev/null
+done
+----
+
+== Next Up:
+
+* get non-maven projects to build/run
